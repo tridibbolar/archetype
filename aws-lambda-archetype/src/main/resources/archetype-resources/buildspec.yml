@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean compile
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mvn package -DskipTests
+      - aws cloudformation package --template-file ${service}.yaml 
+                                   --s3-bucket codepipeline-ap-southeast-1-869169002093 
+                                   --output-template-file ${service}OutputTemplate.yaml
+                                   
+artifacts:
+  type: zip
+  files:
+    - target/${artifactId}-1.0-SNAPSHOT-aws.jar
+    - ${service}.yaml
+    - ${service}OutputTemplate.yaml

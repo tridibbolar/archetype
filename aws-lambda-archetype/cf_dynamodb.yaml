@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources: 
+  collabAlertTable: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+#        - 
+#          AttributeName: "carrIataCd"
+#          AttributeType: "S"
+        - 
+          AttributeName: "fltNbr"
+          AttributeType: "S"
+#        - 
+#          AttributeName: "fltLclOrigDt"
+#          AttributeType: "S"
+#        - 
+#          AttributeName: "origArptCd"
+#          AttributeType: "S"
+#        - 
+#          AttributeName: "destArtpCd"
+#          AttributeType: "S"
+#        - 
+#          AttributeName: "origOccurNbr"
+#           AttributeType: "N"
+#         - 
+#           AttributeName: "destOccurNbr"
+#           AttributeType: "N"
+#         - 
+#           AttributeName: "noseNbr"
+#           AttributeType: "S"
+#         - 
+#           AttributeName: "tailNbr"
+#           AttributeType: "S"
+#         - 
+#           AttributeName: "alertMsg"
+#           AttributeType: "S"
+#         - 
+#           AttributeName: "alertType"
+#           AttributeType: "S"
+        - 
+          AttributeName: "alertName"
+          AttributeType: "S"
+#         - 
+#           AttributeName: "eventCreationTime"
+#           AttributeType: "S"
+#         - 
+#           AttributeName: "eventCreationSystem"
+#           AttributeType: "S"  
+          
+      KeySchema: 
+        - 
+          AttributeName: "alertName"
+          KeyType: "HASH"
+        - 
+          AttributeName: "fltNbr"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "collabAlertTable"
+      GlobalSecondaryIndexes: 
+        - 
+          IndexName: "byFlightGSI"
+          KeySchema: 
+            - 
+              AttributeName: "fltNbr"
+              KeyType: "HASH"
+            - 
+              AttributeName: "alertName"
+              KeyType: "RANGE"
+          Projection: 
+            NonKeyAttributes: 
+              - "alertMsg"
+              - "alertType"
+            ProjectionType: "INCLUDE"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
