@@ -1,0 +1,27 @@
+{
+	"name": "${service}Build",
+	"source": {
+		"type": "CODEPIPELINE",
+		"insecureSsl": false
+	},
+	"artifacts": {
+		"type": "CODEPIPELINE",
+		"name": "${service}Build",
+		"packaging": "NONE"
+	},
+	"cache": {
+		"type": "NO_CACHE"
+	},
+	"environment": {
+		"type": "LINUX_CONTAINER",
+		"image": "aws/codebuild/java:openjdk-8",
+		"computeType": "BUILD_GENERAL1_SMALL",
+		"environmentVariables": [],
+		"privilegedMode": false
+	},
+	"serviceRole": "arn:aws:iam::${awsaccountid}:role/${service}ServiceRole",
+	"timeoutInMinutes": 60,
+	"encryptionKey": "arn:aws:kms:${awsregion}:${awsaccountid}:alias/aws/s3",
+	"tags": [],
+	"badgeEnabled": false
+}

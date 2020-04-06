@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  ${service}:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: ${groupId}.lambda.handler.${service}LambdaHandler
+      Runtime: java8
+      CodeUri: target/${artifactId}-1.0-SNAPSHOT-aws.jar
+      Description: 'Business Service'
+      MemorySize: 768
+      Timeout: 300
+      Role: 'arn:aws:iam::${awsaccountid}:role/LambdaExecutionRole'
+#      Environment:
+#        Variables:
+#          JAVA_TOOL_OPTIONS: -Dcom.sun.xml.ws.transport.http.client.HttpTransportPipe.dump=true -Dcom.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump=true -Dcom.sun.xml.ws.transport.http.HttpAdapter.dump=true -Dcom.sun.xml.internal.ws.transport.http.HttpAdapter.dump=true    

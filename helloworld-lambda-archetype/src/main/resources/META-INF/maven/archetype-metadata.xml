@@ -1,0 +1,46 @@
+<archetype-descriptor
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
+	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="lambda-archetype">
+
+	<fileSets>
+		<fileSet filtered="true" packaged="true" encoding="UTF-8">
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.java</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="true" packaged="false" encoding="UTF-8">
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>**/*.xml</include>
+				<include>**/*.wsdl</include>
+				<include>**/*.xsd</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="true" packaged="false" encoding="UTF-8">
+			<directory/>
+			<includes>
+				<include>**/*.xml</include>
+				<include>**/*.yml</include>
+				<include>**/*.yaml</include>
+				<include>**/*.json</include>
+				<include>**/*.bat</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+
+	<requiredProperties>
+		<requiredProperty key="service" />
+		<requiredProperty key="awsregion" />
+		<requiredProperty key="awsaccountid" />
+		<!-- default username and password are my@username and my@password-->
+		<requiredProperty key="git-username">
+			<defaultValue>my%40username</defaultValue>
+		</requiredProperty>
+		<requiredProperty key="git-pwd">
+			<defaultValue>my%40password</defaultValue>
+		</requiredProperty>
+	</requiredProperties>
+
+</archetype-descriptor>

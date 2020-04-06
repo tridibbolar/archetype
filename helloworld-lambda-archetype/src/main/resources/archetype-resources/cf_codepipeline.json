@@ -1,0 +1,118 @@
+{
+    "pipeline": {
+        "name": "${service}Pipeline",
+        "roleArn": "arn:aws:iam::${awsaccountid}:role/service-role/ecs-codepipeline-role",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-${awsregion}-${awsaccountid}"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeCommit",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "master",
+                            "PollForSourceChanges": "false",
+                            "RepositoryName": "${service}Repo"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ],
+                        "inputArtifacts": []
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "CodeBuild",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "${service}Build"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "MyAppBuild"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "MyApp"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Staging",
+                "actions": [
+                    {
+                        "name": "${service}Stack-DEV",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "ChangeSetName": "${service}ChangeSet-DEV",
+                            "RoleArn": "arn:aws:iam::${awsaccountid}:role/LambdaExecutionRole",
+                            "StackName": "${service}Stack-DEV",
+                            "TemplatePath": "MyAppBuild::${service}OutputTemplate.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "MyAppBuild"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "DeployFunction",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "${service}ChangeSet-DEV",
+                            "StackName": "${service}Stack-DEV"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": []
+                    }
+                ]
+            }
+        ],
+        "version": 8
+    }
+}
